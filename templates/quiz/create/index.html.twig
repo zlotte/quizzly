@@ -6,7 +6,12 @@
 
     <ul class="questions" data-index="{{ form.questions|length > 0 ? form.questions|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}"></ul>
 
+    <ul class="quizCodes" data-index="{{ form.quizCodes|length > 0 ? form.quizCodes|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(form.quizCodes.vars.prototype)|e('html_attr') }}"></ul>
+
+
     <button type="button" class="add_item_link" data-collection-holder-class="questions">Add a question</button>
+
+    <button type="button" class="add_item_link_quiz_codes" data-collection-holder-class="quizCodes">Add code</button>
 
     {{ form_end(form) }}
 
@@ -29,13 +34,29 @@
             collectionHolder.dataset.index ++;
         };
 
+        const addQuizCodeFormToCollection = (e) => {
+            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+            const item = document.createElement('li');
+
+            item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, collectionHolder.dataset.index);
+
+            collectionHolder.appendChild(item);
+
+            collectionHolder.dataset.index ++;
+        };
+
         document.querySelectorAll('.add_item_link').forEach(btn => {
-            btn.addEventListener("click", addFormToCollection)
+            btn.addEventListener('click', addFormToCollection)
+        });
+
+        document.querySelectorAll('.add_item_link_quiz_codes').forEach(btn => {
+            btn.addEventListener('click', addQuizCodeFormToCollection)
         });
 
         function addAnswer(questionIndex) {
             document.querySelectorAll('.add_item_link_answer_' + questionIndex).forEach(btn => {
-                btn.addEventListener("click", addAnswerFormToCollection(questionIndex))
+                btn.addEventListener('click', addAnswerFormToCollection(questionIndex))
             });
         }
 

@@ -32,9 +32,13 @@ class Quiz
     #[Assert\NotNull]
     private Collection $questions;
 
+    #[ORM\OneToMany(targetEntity: QuizCode::class, mappedBy: 'quiz', cascade: ['persist'])]
+    private Collection $quizCodes;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
+        $this->quizCodes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,6 +74,26 @@ class Quiz
     {
         if ($this->questions->contains($question)) {
             $this->questions->removeElement($question);
+        }
+    }
+
+    public function getQuizCodes(): Collection
+    {
+        return $this->quizCodes;
+    }
+
+    public function addQuizCode(QuizCode $quizCode): void
+    {
+        if (!$this->quizCodes->contains($quizCode)) {
+            $this->quizCodes->add($quizCode);
+            $quizCode->setQuiz($this);
+        }
+    }
+
+    public function removeQuizCode(QuizCode $quizCode): void
+    {
+        if ($this->quizCodes->contains($quizCode)) {
+            $this->quizCodes->removeElement($quizCode);
         }
     }
 

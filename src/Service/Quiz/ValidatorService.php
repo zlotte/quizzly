@@ -14,4 +14,18 @@ class ValidatorService
             throw new \Exception('cheating');
         }
     }
+
+    public function validateQuizCode(Quiz $quiz, ?string $quizCode): void
+    {
+        $quizCodes = $quiz->getQuizCodes()->toArray();
+        $quizCodeExist = array_filter($quizCodes, function($value) use ($quizCode) {
+            return $quizCode === $value->getCode();
+        });
+
+        if (count($quizCodeExist) === 0) {
+            throw new \Exception('Code is not valid');
+        }
+
+        return;
+    }
 }

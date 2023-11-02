@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Entity\Question;
 use App\Entity\Quiz;
+use App\Form\QuizCodeType;
+use App\Form\Type\QuizShowType;
 use App\Form\Type\QuizStartType;
 use App\Form\Type\QuizType;
 use App\Repository\QuestionRepository;
@@ -48,11 +50,30 @@ class QuizController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/quiz/{id}', name: 'show_quiz', methods: ['GET'])]
+    #[Route(path: '/quiz/{id}', name: 'show_quiz', methods: ['GET', 'POST'])]
     public function showQuiz(Request $request, Quiz $quiz): Response
     {
+        $form = $this->createForm(QuizShowType::class, $quiz);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $quizCode = $form->all()['quizCode']->getData();
+
+            if ($quiz->getQuizCodes()->count() > 0) {
+                $this->validatorService->validateQuizCode($quiz, $quizCode);
+
+                $request->getSession()->set('quizCode', $quizCode);
+
+                return $this->redirectToRoute('start_quiz', [
+                    'id' => $quiz->getId(),
+                    'questionId' => $quiz->getQuestions()->first()->getId(),
+                ]);
+            }
+        }
+
         return $this->render('quiz/show/index.html.twig', [
             'quiz' => $quiz,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -70,6 +91,11 @@ class QuizController extends AbstractController
     ): Response
     {
         $this->validatorService->validateQuiz($quiz, $question);
+
+        if ($quiz->getQuizCodes()->count() > 0) {
+            $quizCode = $request->getSession()->get('quizCode');
+            $this->validatorService->validateQuizCode($quiz, $quizCode);
+        }
 
         $form = $this->createForm(QuizStartType::class, $question, [
             'answersInProgress' => $this->answersStorageService->retrieveAnswersInProgress($quiz),
