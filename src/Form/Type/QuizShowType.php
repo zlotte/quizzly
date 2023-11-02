@@ -18,38 +18,22 @@ use App\Entity\Quiz;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class QuizType extends AbstractType
+class QuizShowType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'label' => 'quiz_name',
+            ->add('quizCode', TextType::class, [
+                'label' => 'quiz_code',
                 'translation_domain' => 'messages',
                 'required' => true,
                 'constraints' => [
                     new NotBlank(),
-                    new Length(['min' => '5', 'max'=> 255]),
-                ]
-            ])
-            ->add('questions', CollectionType::class, [
-                'entry_type' => QuestionType::class,
-                'allow_add' => true,
-                'by_reference' => false,
-            ])
-            ->add('quizCodes', CollectionType::class, [
-                'entry_type' => QuizCodeType::class,
-                'allow_add' => true,
-                'by_reference' => false,
+                    new Length(['min' => '1', 'max'=> 255]),
+                ],
+                'mapped' => false,
             ])
             ->add('save', SubmitType::class)
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Quiz::class,
-        ]);
     }
 }
