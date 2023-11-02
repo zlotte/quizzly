@@ -21,10 +21,7 @@ class AnswerStorageService
             [
                 'quizId' => $quiz->getId(),
                 'questionId' => $question->getId(),
-                'answers' => $this->requestStack
-                                    ->getCurrentRequest()
-                                    ->request
-                                    ->all()['quiz_start']['answers'],
+                'answers' => $this->getAnswersFromSession(),
             ]
         ]); 
     }
@@ -41,10 +38,7 @@ class AnswerStorageService
             $answers[] = [
                 'quizId' => $quiz->getId(),
                 'questionId' => $question->getId(),
-                'answers' => $this->requestStack
-                                    ->getCurrentRequest()
-                                    ->request
-                                    ->all()['quiz_start']['answers'],
+                'answers' => $this->getAnswersFromSession()
             ];
     
             $this->requestStack->getSession()->set('quiz', $answers);
@@ -66,6 +60,10 @@ class AnswerStorageService
     {
         $finishedQuizes = $this->requestStack->getSession()->get('finishedQuizes');
 
+        if (!is_array($finishedQuizes)) {
+            return [];
+        }
+
         $isCurrentQuizFinished = array_filter($finishedQuizes, function($value) use ($quiz) {
             return $value['quizId'] === $quiz->getId();
         });
@@ -77,5 +75,13 @@ class AnswerStorageService
         $answers = $this->requestStack->getSession()->get('quiz');
 
         return QuizHelper::getQuizAnswers($quiz, $answers);
+    }
+
+    private function getAnswersFromSession(): array
+    {
+        return $this->requestStack
+                ->getCurrentRequest()
+                ->request
+                ->all()['quiz_start']['answers'];
     }
 }
