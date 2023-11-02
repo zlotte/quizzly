@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ quiz.name }}</h1>
+    <ul>
+        {% for quizQuestion in quiz.questions %}
+            <li>
+                {{ quizQuestion.title }}
+                ({{ quizQuestion.id }})
+            </li>
+            <ul>
+                {% for quizQuestionAnswer in quizQuestion.answers %}
+                    <li>
+                        {% if quizQuestionAnswer.correct %}
+                            <span style="color: green">
+                                {{ quizQuestionAnswer.title }}
+                                ({{ quizQuestionAnswer.id }})
+                            </span>
+                        {% else %}
+                            {% set color = '' %}
+
+                            {% for answer in answers %}
+                                {% if answer.questionId is same as quizQuestion.id %}
+                                    {% for questionAnswer in answer.answers %}
+                                        {% if questionAnswer|number_format is same as quizQuestionAnswer.id|number_format %}
+                                            {% set color = 'red' %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <span style="color: {{ color }}">{{ quizQuestionAnswer.title }}</span>
+                            ({{ quizQuestionAnswer.id }})
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+{% endblock %}

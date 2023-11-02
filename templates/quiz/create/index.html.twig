@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+
+    <ul class="questions" data-index="{{ form.questions|length > 0 ? form.questions|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}"></ul>
+
+    <button type="button" class="add_item_link" data-collection-holder-class="questions">Add a question</button>
+
+    {{ form_end(form) }}
+
+    <script>
+        const addFormToCollection = (e) => {
+            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+            const item = document.createElement('li');
+
+            item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, collectionHolder.dataset.index);
+
+            const questionIndex = collectionHolder.dataset.index;
+
+            item.innerHTML += '<ul class="answers_' + questionIndex + '" data-index="' + questionIndex + '" data-prototype="<div id=quiz_questions_' + questionIndex + '_answers___name__><div><label for=quiz_questions_' + questionIndex + '_answers___name___title class=required>Atsakymas</label><input type=text id=quiz_questions_' + questionIndex + '_answers___name___title name=quiz[questions][' + questionIndex + '][answers][__name__][title] required=required/><label for=quiz_questions_' + questionIndex + '_answers___name___correct class=required>Teisingas</label><input type=checkbox id=quiz_questions_' + questionIndex + '_answers___name___correct name=quiz[questions][' + questionIndex + '][answers][__name__][correct]/></div></div>"></ul>';
+
+            item.innerHTML += '<button type="button" class="add_item_link_answer_' + questionIndex + '" data-collection-holder-class="answers_' + questionIndex + '" onclick="addAnswer(' + questionIndex + ')">Add a answer</button>'
+
+            collectionHolder.appendChild(item);
+
+            collectionHolder.dataset.index ++;
+        };
+
+        document.querySelectorAll('.add_item_link').forEach(btn => {
+            btn.addEventListener("click", addFormToCollection)
+        });
+
+        function addAnswer(questionIndex) {
+            document.querySelectorAll('.add_item_link_answer_' + questionIndex).forEach(btn => {
+                btn.addEventListener("click", addAnswerFormToCollection(questionIndex))
+            });
+        }
+
+        const addAnswerFormToCollection = (questionIndex) => {
+            const collectionHolder = document.querySelector('.answers_' + questionIndex);
+            const item = document.createElement('li');
+
+            item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, collectionHolder.dataset.index);
+
+            collectionHolder.appendChild(item);
+            collectionHolder.dataset.index ++;
+        }
+    </script>
+{% endblock %}

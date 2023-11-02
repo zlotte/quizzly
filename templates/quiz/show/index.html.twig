@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <p>{{ quiz.name }}</p>
+    <a href="{{ path('start_quiz', {'id': quiz.id, 'questionId': quiz.questions.first.id}) }}">Start quiz</a>
+
+{% endblock %}

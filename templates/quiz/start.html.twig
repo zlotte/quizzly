@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {{ form(form) }}
+        {% if finish %}
+            <a href="{{ path('finish_quiz', {'id': quiz.id}) }}">Finish quiz</a>
+        {% endif %}
+    {% endblock %}
