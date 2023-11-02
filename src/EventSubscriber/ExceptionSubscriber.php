@@ -28,9 +28,9 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        // $url = $this->router->generate('index');
-        // $response = new RedirectResponse($url);
+        $url = $this->router->generate('index');
+        $response = new RedirectResponse($url);
 
-        // $event->setResponse($response);
+        $event->setResponse($response);
     }
 }
