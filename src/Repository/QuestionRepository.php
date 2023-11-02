@@ -21,7 +21,9 @@ class QuestionRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('q')
                     ->select('q')
                     ->where('q.id > :questionId')
+                    ->andWhere('q.quiz = :quizId' )
                     ->setParameter(':questionId', $question->getId())
+                    ->setParameter(':quizId', $quiz->getId())
                     ->orderBy('q.id', 'DESC')
                     ->setFirstResult(0)
                     ->setMaxResults(1);
