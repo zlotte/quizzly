@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Quiz;
+
 use App\Entity\Question;
 use App\Entity\Quiz;
 

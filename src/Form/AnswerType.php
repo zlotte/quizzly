@@ -22,7 +22,7 @@ class AnswerType extends AbstractType
                     'translation_domain' => 'messages',
                     'constraints' => [
                         new NotBlank(),
-                        new Length(['min'=> 3, 'max'=> 255]),
+                        new Length(['min'=> 1, 'max'=> 255]),
                     ]
                 ])
                 ->add('correct', CheckboxType::class, [
