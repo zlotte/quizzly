@@ -2,7 +2,15 @@
 
 {% block body %}
 
-    {{ form(form) }}
+    {{ form_start(form) }}    
+        {{ form_label(form.answers) }}
+        <br><br>
+        {% for answer in form.answers %}
+        <li>
+            {{ form_row(answer) }}
+        </li>
+        {% endfor %}
+    {{ form_end(form) }}
         {% if finish %}
             <a href="{{ path('finish_quiz', {'id': quiz.id}) }}">Finish quiz</a>
         {% endif %}

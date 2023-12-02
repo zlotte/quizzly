@@ -20,7 +20,7 @@ class Question
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 500)]
     #[Assert\NotBlank]
     private ?string $title = null;
 

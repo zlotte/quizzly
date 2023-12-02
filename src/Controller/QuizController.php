@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Entity\Question;
 use App\Entity\Quiz;
-use App\Form\QuizCodeType;
 use App\Form\Type\QuizShowType;
 use App\Form\Type\QuizStartType;
 use App\Form\Type\QuizType;
@@ -57,7 +56,7 @@ class QuizController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $quizCode = $form->all()['quizCode']->getData();
+            $quizCode = $form->get('quizCode')->getData();
 
             if ($quiz->getQuizCodes()->count() > 0) {
                 $this->validatorService->validateQuizCode($quiz, $quizCode);

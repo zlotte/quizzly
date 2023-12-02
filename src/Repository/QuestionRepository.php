@@ -24,7 +24,7 @@ class QuestionRepository extends ServiceEntityRepository
                     ->andWhere('q.quiz = :quizId' )
                     ->setParameter(':questionId', $question->getId())
                     ->setParameter(':quizId', $quiz->getId())
-                    ->orderBy('q.id', 'DESC')
+                    ->orderBy('q.id', 'ASC')
                     ->setFirstResult(0)
                     ->setMaxResults(1);
 
